@@ -3,7 +3,7 @@ const helmet = require("helmet");
 const compression = require("compression");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
+const swaggerSpec = require("./swagger/swagger-config");
 const routes = require("./routes");
 
 const app = express();

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const authController = require("../controllers/auth.controller");
-// const userValidator = require("../validators/user.validator");
+const { authValidation } = require("../validators");
 // const { responseHandler } = require("../helper/generic-response");
 // const {
 //   checkAccessToken,
@@ -10,6 +10,11 @@ const authController = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.post("/", authController.addUser);
+router.post(
+  "/login",
+  authValidation.loginUserValidator,
+  authController.loginUser,
+  responseHandler
+);
 
 module.exports = router;

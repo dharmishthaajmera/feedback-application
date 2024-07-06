@@ -1,6 +1,5 @@
 const model = require("../models");
 const bcrypt = require("bcrypt");
-const { customException } = require("../helper/error-handler");
 
 const findUser = async (email) => {
   const existingUser = await model.Users.findOne({
@@ -8,10 +7,6 @@ const findUser = async (email) => {
       email,
     },
   });
-
-  if (existingUser) {
-    throw customException("User already exists", 409);
-  }
 
   return existingUser;
 };
@@ -34,8 +29,17 @@ const encryptPassword = async (password) => {
   return hashedPassword;
 };
 
+const checkExistingLogin = async (existingUser) => {
+  const existingLogin = await model.userAuthenticate.findOne({
+    where: { user_id: existingUser.id },
+  });
+
+  return existingLogin;
+};
+
 module.exports = {
   findUser,
   addUser,
   encryptPassword,
+  checkExistingLogin,
 };
