@@ -1,5 +1,6 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
+const FeedbackQuestions = require("../models/feedback-questions");
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("comment", {
@@ -11,11 +12,13 @@ module.exports = {
       },
       comment_id: {
         type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
       },
       feedback_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "feedback-questions",
+          model: "feedback_question",
           key: "id",
         },
       },
@@ -35,9 +38,35 @@ module.exports = {
       },
       content: {
         type: Sequelize.STRING,
-      },
-      rating: {
-        type: Sequelize.INTEGER,
+        validate: {
+          isCorrectType(value) {
+            if (!this.feedback_id) return;
+
+            return FeedbackQuestions.findByPk(this.feedback_id).then(
+              (rating_or_content) => {
+                if (rating_or_content) {
+                  if (
+                    rating_or_content.value === "rating" &&
+                    !Number.isInteger(Number(value))
+                  ) {
+                    throw new Error(
+                      "Content must be an integer for rating type"
+                    );
+                  }
+                  if (
+                    rating_or_content.value === "content" &&
+                    typeof value !== "string"
+                  ) {
+                    throw new Error(
+                      "Content must be a string for content type"
+                    );
+                  }
+                }
+              }
+            );
+          },
+          validate: { len: [0, 75] },
+        },
       },
       status: {
         type: Sequelize.ENUM,
@@ -54,7 +83,7 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable("comment");
   },
 };

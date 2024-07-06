@@ -1,6 +1,6 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Users extends Model {
     /**
      * Helper method for defining associations.
@@ -13,21 +13,27 @@ module.exports = (sequelize, DataTypes) => {
   }
   Users.init(
     {
-      userName: {
+      username: {
+        type: Sequelize.STRING,
+      },
+      firstname: {
+        type: Sequelize.STRING,
+      },
+      lastname: {
         type: Sequelize.STRING,
       },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        primaryKey: true,
       },
-      is_admin: {
-        type: Sequelize.BOOLEAN,
+      role: {
+        type: Sequelize.ENUM,
+        values: ["admin", "user"],
       },
     },
     {

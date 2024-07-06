@@ -9,29 +9,41 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userName: {
+      username: {
+        type: Sequelize.STRING,
+      },
+      firstname: {
+        type: Sequelize.STRING,
+      },
+      lastname: {
         type: Sequelize.STRING,
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
-      is_admin: {
-        type: Sequelize.BOOLEAN,
+      role: {
+        type: Sequelize.ENUM,
+        values: ["admin", "user"],
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW(),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW(),
       },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable("users");
   },
 };

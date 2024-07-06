@@ -1,5 +1,5 @@
 "use strict";
-const { Model, Sequelize } = require("sequelize");
+const { Model, Sequelize, NOW } = require("sequelize");
 module.exports = (sequelize) => {
   class userAuthenticate extends Model {
     /**
@@ -12,7 +12,8 @@ module.exports = (sequelize) => {
       this.belongsTo(models.Users, {
         foreignKey: "user_id",
         targetKey: "id",
-        as: "users",
+        as: "users_token_fk",
+        onDelete: "cascade",
       });
     }
   }
@@ -21,9 +22,12 @@ module.exports = (sequelize) => {
       user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "users",
+          model: "Users",
           key: "id",
         },
+      },
+      token_id: {
+        type: Sequelize.INTEGER,
       },
       refresh_token: {
         type: Sequelize.STRING,
@@ -32,12 +36,21 @@ module.exports = (sequelize) => {
       expiry_time: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.NOW(),
       },
     },
     {
       sequelize,
       modelName: "userAuthenticate",
       tableName: "user_authenticate",
+    },
+    {
+      indexes: [
+        {
+          unique: true,
+          fields: ["user_id", "token_id"],
+        },
+      ],
     }
   );
   return userAuthenticate;

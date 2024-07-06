@@ -1,6 +1,6 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class feedbackQuestion extends Model {
     /**
      * Helper method for defining associations.
