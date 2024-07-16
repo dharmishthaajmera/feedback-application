@@ -16,10 +16,19 @@ const findUser = async (email) => {
   return existingUser;
 };
 
-const addUser = async (transaction, userName, email, password) => {
+const addUser = async (
+  transaction,
+  userName,
+  firstname,
+  lastname,
+  email,
+  password
+) => {
   const newUser = await model.Users.create(
     {
       userName,
+      firstname,
+      lastname,
       email,
       password,
     },
@@ -34,8 +43,17 @@ const encryptPassword = async (password) => {
   return hashedPassword;
 };
 
+const checkExistingLogin = async (existingUser, token_id) => {
+  const existingLogin = await model.userAuthenticate.findOne({
+    where: { user_id: existingUser.id, token_id },
+  });
+
+  return existingLogin;
+};
+
 module.exports = {
   findUser,
   addUser,
   encryptPassword,
+  checkExistingLogin,
 };

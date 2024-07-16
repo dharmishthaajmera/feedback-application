@@ -2,9 +2,10 @@ const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
+const swaggerUI = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const routes = require("./routes");
+const { commonErrorHandler } = require("./helper/error-handler");
 
 const app = express();
 app.use(express.json());
@@ -22,7 +23,7 @@ app.use("/health", (req, res) => {
   res.send({ message: "Application runing successfully!" });
 });
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // REST API entry point
 app.use("/v1", routes);

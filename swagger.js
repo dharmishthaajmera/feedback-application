@@ -1,15 +1,17 @@
 const swaggerJSDoc = require("swagger-jsdoc");
 
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "feedback-application",
-      version: "1.0.0",
-      description: "API documentation for your Node.js application",
-    },
+const swaggerDefinition = {
+  openapi: "3.0.0",
+  info: {
+    title: "My API",
+    version: "1.0.0",
+    description: "My API Description",
   },
-  apis: ["../routes"], // Path to the API routes
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ["./routes/*.js"], // Path to the API routes in your Node.js application
 };
 
 const swaggerSpec = swaggerJSDoc(options);

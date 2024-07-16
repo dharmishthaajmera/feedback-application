@@ -19,18 +19,22 @@ module.exports = (sequelize) => {
   userAuthenticate.init(
     {
       user_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "users",
           key: "id",
         },
+        onDelete: "cascade",
+      },
+      token_id: {
+        type: Sequelize.STRING,
       },
       refresh_token: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       expiry_time: {
-        type: Sequelize.DATE,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
     },
