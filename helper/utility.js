@@ -4,13 +4,13 @@ const { authService } = require("../services");
 const model = require("../models");
 const { customException } = require("./error-handler");
 
-const generateToken = async (user_id, token_id, transaction = null) => {
+const generateToken = async (user_id, email, token_id, transaction = null) => {
   try {
     const refreshTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
     const accessTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
 
     const refreshToken = jwt.sign(
-      { user_id, refreshTokenId },
+      { email, refreshTokenId, user_id },
       process.env.REFRESH_SECRET_KEY,
       {
         expiresIn: 7776000,
@@ -18,7 +18,7 @@ const generateToken = async (user_id, token_id, transaction = null) => {
     );
 
     const accessToken = jwt.sign(
-      { user_id, accessTokenId },
+      { email, accessTokenId, user_id },
       process.env.ACCESS_SECRET_KEY,
       {
         expiresIn: 86400,
@@ -36,6 +36,7 @@ const generateToken = async (user_id, token_id, transaction = null) => {
       refresh_token: refreshTokenId,
       expiry_time: refreshTokenExpireTime,
     };
+
     await model.userAuthenticate.create(body, { transaction });
 
     const token = {

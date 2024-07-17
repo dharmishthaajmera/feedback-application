@@ -15,7 +15,7 @@ const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const { token_id } = req.headers;
 
-    const existingUser = await findUser(email);
+    const existingUser = (await findUser(email)).dataValues;
     if (!existingUser) {
       throw customException("User not found.", 401);
     }
@@ -36,12 +36,17 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    const tokens = await generateToken(existingUser.id, token_id, transaction);
+    const tokens = await generateToken(
+      existingUser.id,
+      email,
+      token_id,
+      transaction
+    );
 
     req.statusCode = 200;
     req.data = {
       id: existingUser.id,
-      name: existingUser.userName,
+      name: existingUser.username,
       email: existingUser.email,
       tokens,
     };
@@ -58,13 +63,13 @@ const loginUser = async (req, res, next) => {
 const logoutUser = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
-    const { user } = req;
+    const { user_id } = req.user;
     const { token_id } = req.headers;
 
     await model.userAuthenticate.destroy(
       {
         where: {
-          user_id: user.user_id,
+          user_id: user_id,
           token_id,
         },
       },
@@ -84,13 +89,15 @@ const logoutUser = async (req, res, next) => {
 
 const generateAccessToken = async (req, res, next) => {
   try {
-    const { user } = req;
-
+    const { email, user_id } = req.user;
     const accessTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
-
+    console.log(email);
     const newAccessToken = jwt.sign(
-      { userId: user.userId, accessTokenId },
-      process.env.ACCESS_SECRET_KEY
+      { email, accessTokenId, user_id },
+      process.env.ACCESS_SECRET_KEY,
+      {
+        expiresIn: 86400,
+      }
     );
 
     req.data = {

@@ -31,16 +31,22 @@ router.get(
   "/:id",
   checkAccessToken,
   userValidation.getUserByIdValidation,
-  userController.addUser,
+  userController.getUserById,
   responseHandler
 );
 
 /**
  * @swagger
- * /users/:
+ * /v1/users/:
  *   post:
  *     summary: Add new user
  *     tags: [User]
+ *     headers:
+ *       required: true
+ *       content:
+ *          access-token
+ *       example:
+ *        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IklNZEVCaWxuMmE5UktmSEYiLCJhY2Nlc3NUb2tlbklkIjoiMjE0Njg2YWItNDg5ZS00ODJmLWI0N2ItZTA5ODU3NWNiYzVhLTE3MjEyMDExNDQxNTgiLCJpYXQiOjE3MjEyMDExNDQsImV4cCI6MTcyMTI4NzU0NH0.mAXUnz_lveLUfZERCoc9MOsuLY3rC8AHN3I82N8p1c8
  *     requestBody:
  *       required: true
  *       content:
@@ -62,7 +68,7 @@ router.get(
  *                 type: string
  *               role:
  *                 type: string
- *                 oneOf: ["admin", "user"]
+ *                 enum: [admin, user]
  *               email:
  *                 type: string
  *                 format: email
@@ -78,6 +84,55 @@ router.get(
  *               role: user
  *               email: fake@example.com
  *               password: Password1@
+ *     responses:
+ *       200:
+ *         description: User created details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 2000b183-5b3e-4354-b928-f40bf8dac687
+ *                 email:
+ *                   type: string
+ *                   example: fake@example.com
+ */
+
+/**
+ * @swagger
+ * /v1/users/:
+ *   get:
+ *     summary: Get all users
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   username:
+ *                     type: string
+ *                     example: fakeusername
+ *                   firstname:
+ *                     type: string
+ *                     example: fake first name
+ *                   lastname:
+ *                     type: string
+ *                     example: fake last name
+ *                   role:
+ *                     type: string
+ *                     example: user
+ *                   email:
+ *                     type: string
+ *                     example: fake@example.com
  */
 
 module.exports = router;

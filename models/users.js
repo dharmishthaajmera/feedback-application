@@ -35,11 +35,12 @@ module.exports = (sequelize) => {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true,
+        unique: true,
       },
       role: {
         type: Sequelize.ENUM,
         values: ["admin", "user"],
+        defaultValue: "user",
       },
     },
     {

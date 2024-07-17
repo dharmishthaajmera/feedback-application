@@ -37,7 +37,7 @@ const addUserValidator = async (req, res, next) => {
 
 const getUserByIdValidation = async (req, res, next) => {
   const schema = yup.object({
-    param: yup.object({
+    params: yup.object({
       id: yup.string().uuid().required().label("Id"),
     }),
   });

@@ -2,12 +2,11 @@ const {
   customException,
   commonErrorHandler,
 } = require("../helper/error-handler");
-const model = require("../models");
 const { userService } = require("../services");
 
 const checkAdmin = async (req, res, next) => {
   try {
-    const { email } = req.headers;
+    const { email } = req.user;
     const existingUser = await userService.findUser(email);
     const isAdmin = existingUser?.role === "admin";
 

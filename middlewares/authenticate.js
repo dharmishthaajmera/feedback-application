@@ -49,15 +49,16 @@ const checkRefreshToken = async (req, res, next) => {
       req.user = user;
     });
 
-    const existingLogin = await model.userAuthenticate.findOne({
-      where: {
-        user_id: decodedJwt?.user_id,
-        refresh_token: decodedJwt?.refreshTokenId,
-      },
-    });
+    const existingLogin = (
+      await model.userAuthenticate.findOne({
+        where: {
+          user_id: decodedJwt?.user_id,
+          refresh_token: decodedJwt?.refreshTokenId,
+        },
+      })
+    ).dataValues;
     if (!existingLogin) throw customException("Please Login", 401);
 
-    req.user = existingLogin;
     req.refreshToken = refreshToken;
     next();
   } catch (error) {

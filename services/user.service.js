@@ -1,5 +1,7 @@
+const { customException } = require("../helper/error-handler");
 const model = require("../models");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 
 const findUser = async (email) => {
   const existingUser = await model.Users.findOne({
@@ -13,7 +15,7 @@ const findUser = async (email) => {
 
 const addUser = async (
   transaction,
-  userName,
+  username,
   firstname,
   lastname,
   email,
@@ -21,7 +23,7 @@ const addUser = async (
 ) => {
   const newUser = await model.Users.create(
     {
-      userName,
+      username,
       firstname,
       lastname,
       email,
@@ -46,9 +48,34 @@ const checkExistingLogin = async (existingUser, token_id) => {
   return existingLogin;
 };
 
+const getAllUsers = async () => {
+  try {
+    const allUsers = await model.Users.findAll({
+      where: { role: { [Op.not]: "admin" } },
+      attributes: ["id", "username", "firstname", "lastname", "email"],
+    });
+
+    return allUsers;
+  } catch (error) {
+    console.log(error);
+    throw customException("Error getting all users");
+  }
+};
+
+const getUserById = async (id) => {
+  const userDetails = await model.Users.findAll({
+    where: { id },
+    attributes: ["id", "username", "firstname", "lastname", "email", "role"],
+  });
+
+  return userDetails;
+};
+
 module.exports = {
   findUser,
   addUser,
   encryptPassword,
   checkExistingLogin,
+  getAllUsers,
+  getUserById,
 };

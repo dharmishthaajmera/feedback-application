@@ -23,3 +23,5 @@ router.get(
   feedbackQuestionsController.getFeedbackQuestions,
   responseHandler
 );
+
+module.exports = router;
