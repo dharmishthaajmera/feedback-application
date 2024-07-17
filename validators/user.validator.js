@@ -23,15 +23,13 @@ const addUserValidator = async (req, res, next) => {
       email: yup.string().email().required().label("email"),
       password: yup
         .string()
-        .required(responseMessages.REQUIRED_FIELD("password"))
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
           responseMessages.INVALID_PASSWORD
-        ),
-      is_admin: yup
-        .boolean()
-        .typeError(responseMessages.BOOLEAN_REQUIRED)
-        .default(false),
+        )
+        .required()
+        .label("password"),
+      is_admin: yup.boolean().typeError().label("is admin").default(false),
     }),
   });
   validator(req, res, schema, next);

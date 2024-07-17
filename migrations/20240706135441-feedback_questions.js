@@ -2,24 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("feedback_question", {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal("uuid_generate_v4()"),
       },
-      userName: {
+      question: {
         type: Sequelize.STRING,
       },
-      password: {
-        type: Sequelize.STRING,
-      },
-      email: {
-        type: Sequelize.STRING,
-      },
-      is_admin: {
-        type: Sequelize.BOOLEAN,
+      rating_or_content: {
+        type: Sequelize.ENUM,
+        values: ["rating", "content"],
+        defaultValue: "rating",
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("feedback_question");
   },
 };

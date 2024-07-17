@@ -1,6 +1,10 @@
 const { sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { userService } = require("../services");
+const {
+  customException,
+  commonErrorHandler,
+} = require("../helper/error-handler");
 
 const addUser = async (req, res, next) => {
   const transaction = await sequelize.transaction();
@@ -8,7 +12,11 @@ const addUser = async (req, res, next) => {
     const { userName, firstname, lastname, email, password } = req.body;
     const hashedPassword = await userService.encryptPassword(password);
 
-    await userService.findUser(email);
+    const existingUser = await userService.findUser(email);
+
+    if (existingUser) {
+      throw customException("User already exists", 409);
+    }
 
     const newUser = await userService.addUser(
       transaction,

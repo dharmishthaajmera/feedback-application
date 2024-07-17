@@ -10,7 +10,12 @@ const {
 
 const router = Router();
 
-router.post("/", authController.addUser);
+router.post(
+  "/login",
+  authValidation.loginUserValidator,
+  authController.loginUser,
+  responseHandler
+);
 
 router.post(
   "/logout",

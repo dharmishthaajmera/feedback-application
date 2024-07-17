@@ -1,6 +1,5 @@
 const model = require("../models");
 const bcrypt = require("bcrypt");
-const { customException } = require("../helper/error-handler");
 
 const findUser = async (email) => {
   const existingUser = await model.Users.findOne({
@@ -8,10 +7,6 @@ const findUser = async (email) => {
       email,
     },
   });
-
-  if (existingUser) {
-    throw customException("User already exists", 409);
-  }
 
   return existingUser;
 };
