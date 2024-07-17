@@ -20,11 +20,15 @@ module.exports = (sequelize) => {
   userAuthenticate.init(
     {
       user_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "Users",
           key: "id",
         },
+        onDelete: "cascade",
+      },
+      token_id: {
+        type: Sequelize.STRING,
       },
       token_id: {
         type: Sequelize.INTEGER,
@@ -34,7 +38,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       expiry_time: {
-        type: Sequelize.DATE,
+        type: Sequelize.BIGINT,
         allowNull: false,
         defaultValue: Sequelize.NOW(),
       },

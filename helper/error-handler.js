@@ -20,7 +20,7 @@ const commonErrorHandler = async (
     data: {},
     message: errorMessage,
   };
-
+  console.log(response);
   res.status(statusCode).send(response);
 };
 

@@ -9,6 +9,9 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.comment, {
+        foreignKey: "feedback_id",
+      });
     }
   }
   feedbackQuestion.init(

@@ -6,9 +6,9 @@ module.exports = {
     await queryInterface.createTable("comment", {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal("uuid_generate_v4()"),
       },
       comment_id: {
         type: Sequelize.INTEGER,
@@ -16,21 +16,21 @@ module.exports = {
         primaryKey: true,
       },
       feedback_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "feedback_question",
           key: "id",
         },
       },
       feedback_for: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "users",
           key: "id",
         },
       },
       feedback_from: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "users",
           key: "id",
@@ -76,10 +76,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

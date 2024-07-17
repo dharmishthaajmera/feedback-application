@@ -9,12 +9,12 @@ module.exports = {
       "users",
       [
         {
-          userName: "Dharmishtha Ajmera",
+          username: "dajmera",
+          firstname: "Dharmishtha",
+          lastname: "Ajmera",
           email: "dharmishthaajmera@gmail.com",
           password: await bcrypt.hash("test@123", 10),
-          is_admin: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          role: "admin",
         },
       ],
       {}

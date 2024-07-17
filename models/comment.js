@@ -1,5 +1,5 @@
 "use strict";
-const FeedbackQuestions = require("./feedbackQuestions");
+const FeedbackQuestions = require("./feedback-questions");
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize) => {
   class comment extends Model {
@@ -35,23 +35,23 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       feedback_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: "feedbackQuestion",
+          model: "feedback_question",
           key: "id",
         },
       },
       feedback_for: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: "Users",
+          model: "users",
           key: "id",
         },
       },
       feedback_from: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: "Users",
+          model: "users",
           key: "id",
         },
       },

@@ -7,12 +7,12 @@ module.exports = {
       {
         id: {
           allowNull: false,
-          autoIncrement: true,
           primaryKey: true,
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUID,
+          defaultValue: Sequelize.literal("uuid_generate_v4()"),
         },
         user_id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.UUID,
           references: {
             model: "users",
             key: "id",
@@ -20,24 +20,25 @@ module.exports = {
           onDelete: "cascade",
         },
         token_id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING,
         },
         refresh_token: {
           type: Sequelize.STRING,
           allowNull: false,
         },
         expiry_time: {
-          type: Sequelize.DATE,
+          type: Sequelize.BIGINT,
           allowNull: false,
-          defaultValue: Sequelize.NOW(),
         },
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE,
+          defaultValue: Sequelize.fn("NOW"),
         },
         updatedAt: {
           allowNull: false,
           type: Sequelize.DATE,
+          defaultValue: Sequelize.fn("NOW"),
         },
       },
       {

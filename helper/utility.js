@@ -1,28 +1,53 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { authService } = require("../services");
+const model = require("../models");
+const { customException } = require("./error-handler");
 
-const generateToken = async (user_id, transaction = null) => {
-  const refreshTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
+const generateToken = async (user_id, token_id, transaction = null) => {
+  try {
+    const refreshTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
+    const accessTokenId = `${crypto.randomUUID()}-${new Date().getTime()}`;
 
-  const refreshToken = jwt.sign(
-    { user_id, tokenId: refreshTokenId },
-    process.env.REFRESH_SECRET_KEY,
-    {
-      expiresIn: process.env.REFRESH_EXPIRY_TIME,
-    }
-  );
+    const refreshToken = jwt.sign(
+      { user_id, refreshTokenId },
+      process.env.REFRESH_SECRET_KEY,
+      {
+        expiresIn: 7776000,
+      }
+    );
 
-  const decodeAccessToken = await authService.verifyJWT(refreshToken);
-  const refreshTokenExpireTime = decodeAccessToken.exp;
-  const body = {
-    user_id,
-    refreshTokenId,
-    refreshTokenExpireTime,
-  };
-  await model.UserAuthenticate.create(body, { transaction });
+    const accessToken = jwt.sign(
+      { user_id, accessTokenId },
+      process.env.ACCESS_SECRET_KEY,
+      {
+        expiresIn: 86400,
+      }
+    );
 
-  return refreshToken;
+    const decodeRefreshToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_SECRET_KEY
+    );
+    const refreshTokenExpireTime = decodeRefreshToken.exp;
+    const body = {
+      user_id,
+      token_id,
+      refresh_token: refreshTokenId,
+      expiry_time: refreshTokenExpireTime,
+    };
+    await model.userAuthenticate.create(body, { transaction });
+
+    const token = {
+      refreshToken,
+      accessToken,
+    };
+
+    return token;
+  } catch (error) {
+    console.log(error);
+    throw customException("Error generating tokens", 500);
+  }
 };
 
 module.exports = {

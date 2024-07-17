@@ -9,7 +9,7 @@ const checkAdmin = async (req, res, next) => {
   try {
     const { email } = req.headers;
     const existingUser = await userService.findUser(email);
-    const isAdmin = existingUser?.is_admin;
+    const isAdmin = existingUser?.role === "admin";
 
     if (!isAdmin) {
       throw customException("User is not authorized.", 403);

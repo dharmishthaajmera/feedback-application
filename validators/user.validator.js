@@ -5,11 +5,21 @@ const { responseMessages } = require("../constants");
 const addUserValidator = async (req, res, next) => {
   const schema = yup.object({
     body: yup.object({
-      userName: yup
+      username: yup
         .string()
-        .matches(/^[A-Za-z\s]+$/, responseMessages.VALID_STRING("userName"))
+        .matches(/^[A-Za-z\s]+$/, responseMessages.VALID_STRING("username"))
         .required()
-        .label("userName"),
+        .label("username"),
+      firstname: yup
+        .string()
+        .matches(/^[A-Za-z\s]+$/, responseMessages.VALID_STRING("firstname"))
+        .required()
+        .label("usefirstnamerName"),
+      lastname: yup
+        .string()
+        .matches(/^[A-Za-z\s]+$/, responseMessages.VALID_STRING("lastname"))
+        .required()
+        .label("lastname"),
       email: yup.string().email().required().label("email"),
       password: yup
         .string()
@@ -25,6 +35,16 @@ const addUserValidator = async (req, res, next) => {
   validator(req, res, schema, next);
 };
 
+const getUserByIdValidation = async (req, res, next) => {
+  const schema = yup.object({
+    param: yup.object({
+      id: yup.string().uuid().required().label("Id"),
+    }),
+  });
+  validator(req, res, schema, next);
+};
+
 module.exports = {
   addUserValidator,
+  getUserByIdValidation,
 };
